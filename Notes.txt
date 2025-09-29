@@ -1,0 +1,5 @@
+Username : nandu 
+password : LY7J50q4kik77t2c
+
+
+mongodb+srv://nandu:LY7J50q4kik77t2c@cluster0.ob7dscd.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0

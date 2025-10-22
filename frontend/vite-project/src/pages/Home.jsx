@@ -1,8 +1,22 @@
-import React, { useState } from 'react';
-import { Calendar, Users, MessageSquare, Briefcase, Star, MapPin, Clock, ArrowRight, Menu, X, Search } from 'lucide-react';
+import React, { useState } from "react";
+import {
+  Calendar,
+  Users,
+  MessageSquare,
+  Briefcase,
+  Star,
+  MapPin,
+  Clock,
+  ArrowRight,
+  Menu,
+  X,
+  Search,
+} from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   const upcomingEvents = [
     {
@@ -13,8 +27,9 @@ export default function Home() {
       location: "San Francisco, CA",
       attendees: 1250,
       category: "Technology",
-      image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&h=400&fit=crop",
-      organizer: "Tech Leaders Inc."
+      image:
+        "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&h=400&fit=crop",
+      organizer: "Tech Leaders Inc.",
     },
     {
       id: 2,
@@ -24,8 +39,9 @@ export default function Home() {
       location: "Virtual Event",
       attendees: 890,
       category: "Marketing",
-      image: "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800&h=400&fit=crop",
-      organizer: "Marketing Pro Academy"
+      image:
+        "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800&h=400&fit=crop",
+      organizer: "Marketing Pro Academy",
     },
     {
       id: 3,
@@ -35,8 +51,9 @@ export default function Home() {
       location: "New York, NY",
       attendees: 450,
       category: "Business",
-      image: "https://images.unsplash.com/photo-1511578314322-379afb476865?w=800&h=400&fit=crop",
-      organizer: "Startup Hub"
+      image:
+        "https://images.unsplash.com/photo-1511578314322-379afb476865?w=800&h=400&fit=crop",
+      organizer: "Startup Hub",
     },
     {
       id: 4,
@@ -46,32 +63,35 @@ export default function Home() {
       location: "Boston, MA",
       attendees: 2100,
       category: "Technology",
-      image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&h=400&fit=crop",
-      organizer: "AI Research Foundation"
-    }
+      image:
+        "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&h=400&fit=crop",
+      organizer: "AI Research Foundation",
+    },
   ];
 
   const features = [
     {
       icon: <Users className="w-8 h-8" />,
       title: "Smart Networking",
-      description: "Connect with like-minded professionals using AI-powered matchmaking"
+      description:
+        "Connect with like-minded professionals using AI-powered matchmaking",
     },
     {
       icon: <Calendar className="w-8 h-8" />,
       title: "Event Management",
-      description: "Create, manage, and discover events with comprehensive tools"
+      description:
+        "Create, manage, and discover events with comprehensive tools",
     },
     {
       icon: <MessageSquare className="w-8 h-8" />,
       title: "Real-time Chat",
-      description: "Engage in instant messaging and group discussions"
+      description: "Engage in instant messaging and group discussions",
     },
     {
       icon: <Briefcase className="w-8 h-8" />,
       title: "Project Sharing",
-      description: "Showcase your portfolio and collaborate on projects"
-    }
+      description: "Showcase your portfolio and collaborate on projects",
+    },
   ];
 
   return (
@@ -91,38 +111,84 @@ export default function Home() {
 
             {/* Desktop Menu */}
             <div className="hidden md:flex items-center space-x-8">
-              <a href="#" className="text-gray-700 hover:text-blue-600 transition">Home</a>
-              <a href="#" className="text-gray-700 hover:text-blue-600 transition">Events</a>
-              <a href="#" className="text-gray-700 hover:text-blue-600 transition">Network</a>
-              <a href="#" className="text-gray-700 hover:text-blue-600 transition">About</a>
-              <button className="px-4 py-2 text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50 transition">
+              <a
+                href="#"
+                className="text-gray-700 hover:text-blue-600 transition"
+              >
+                Home
+              </a>
+              <a
+                href="#"
+                className="text-gray-700 hover:text-blue-600 transition"
+              >
+                Events
+              </a>
+              <a
+                href="#"
+                className="text-gray-700 hover:text-blue-600 transition"
+              >
+                Network
+              </a>
+              <a
+                href="#"
+                className="text-gray-700 hover:text-blue-600 transition"
+              >
+                About
+              </a>
+              <button
+                className="px-4 py-2 text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50 transition"
+                onClick={() => navigate("/login")}
+              >
                 Log In
               </button>
-              <button className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:shadow-lg transition">
+
+              <button
+                className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:shadow-lg transition"
+                onClick={() => navigate("/register")}
+              >
                 Sign Up
               </button>
             </div>
 
             {/* Mobile Menu Button */}
-            <button 
+            <button
               className="md:hidden"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {mobileMenuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
             </button>
           </div>
 
           {/* Mobile Menu */}
           {mobileMenuOpen && (
             <div className="md:hidden py-4 space-y-3">
-              <a href="#" className="block text-gray-700 hover:text-blue-600">Home</a>
-              <a href="#" className="block text-gray-700 hover:text-blue-600">Events</a>
-              <a href="#" className="block text-gray-700 hover:text-blue-600">Network</a>
-              <a href="#" className="block text-gray-700 hover:text-blue-600">About</a>
-              <button className="w-full px-4 py-2 text-blue-600 border border-blue-600 rounded-lg">
+              <a href="#" className="block text-gray-700 hover:text-blue-600">
+                Home
+              </a>
+              <a href="#" className="block text-gray-700 hover:text-blue-600">
+                Events
+              </a>
+              <a href="#" className="block text-gray-700 hover:text-blue-600">
+                Network
+              </a>
+              <a href="#" className="block text-gray-700 hover:text-blue-600">
+                About
+              </a>
+              <button
+                className="w-full px-4 py-2 text-blue-600 border border-blue-600 rounded-lg"
+                onClick={() => navigate("/login")}
+              >
                 Log In
               </button>
-              <button className="w-full px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg">
+
+              <button
+                className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:shadow-lg transition"
+                onClick={() => navigate("/register")}
+              >
                 Sign Up
               </button>
             </div>
@@ -134,10 +200,15 @@ export default function Home() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="text-center">
           <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
-            Connect. Network. <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Collaborate.</span>
+            Connect. Network.{" "}
+            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              Collaborate.
+            </span>
           </h1>
           <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-            Join the ultimate event networking platform where professionals connect, share experiences, and build meaningful relationships. Discover events, showcase your projects, and grow your network.
+            Join the ultimate event networking platform where professionals
+            connect, share experiences, and build meaningful relationships.
+            Discover events, showcase your projects, and grow your network.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <button className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg text-lg font-semibold hover:shadow-xl transition flex items-center gap-2">
@@ -175,16 +246,25 @@ export default function Home() {
       {/* Features Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">Platform Features</h2>
-          <p className="text-xl text-gray-600">Everything you need for successful event networking</p>
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            Platform Features
+          </h2>
+          <p className="text-xl text-gray-600">
+            Everything you need for successful event networking
+          </p>
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           {features.map((feature, index) => (
-            <div key={index} className="bg-white rounded-xl p-6 shadow-md hover:shadow-xl transition">
+            <div
+              key={index}
+              className="bg-white rounded-xl p-6 shadow-md hover:shadow-xl transition"
+            >
               <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-purple-100 rounded-lg flex items-center justify-center text-blue-600 mb-4">
                 {feature.icon}
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">{feature.title}</h3>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                {feature.title}
+              </h3>
               <p className="text-gray-600">{feature.description}</p>
             </div>
           ))}
@@ -195,8 +275,12 @@ export default function Home() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="flex justify-between items-center mb-12">
           <div>
-            <h2 className="text-4xl font-bold text-gray-900 mb-2">Upcoming Events</h2>
-            <p className="text-xl text-gray-600">Join thousands of professionals at these featured events</p>
+            <h2 className="text-4xl font-bold text-gray-900 mb-2">
+              Upcoming Events
+            </h2>
+            <p className="text-xl text-gray-600">
+              Join thousands of professionals at these featured events
+            </p>
           </div>
           <button className="hidden md:flex items-center gap-2 px-6 py-3 text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50 transition">
             View All <ArrowRight className="w-4 h-4" />
@@ -205,10 +289,13 @@ export default function Home() {
 
         <div className="grid md:grid-cols-2 gap-8">
           {upcomingEvents.map((event) => (
-            <div key={event.id} className="bg-white rounded-xl shadow-md hover:shadow-xl transition overflow-hidden group">
+            <div
+              key={event.id}
+              className="bg-white rounded-xl shadow-md hover:shadow-xl transition overflow-hidden group"
+            >
               <div className="relative h-48 overflow-hidden">
-                <img 
-                  src={event.image} 
+                <img
+                  src={event.image}
                   alt={event.title}
                   className="w-full h-full object-cover group-hover:scale-110 transition duration-300"
                 />
@@ -217,9 +304,11 @@ export default function Home() {
                 </div>
               </div>
               <div className="p-6">
-                <h3 className="text-2xl font-bold text-gray-900 mb-3">{event.title}</h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-3">
+                  {event.title}
+                </h3>
                 <p className="text-gray-600 mb-4 text-sm">{event.organizer}</p>
-                
+
                 <div className="space-y-2 mb-4">
                   <div className="flex items-center text-gray-600">
                     <Calendar className="w-4 h-4 mr-2" />
@@ -238,7 +327,9 @@ export default function Home() {
                 <div className="flex items-center justify-between pt-4 border-t border-gray-100">
                   <div className="flex items-center text-gray-600">
                     <Users className="w-4 h-4 mr-2" />
-                    <span className="text-sm font-semibold">{event.attendees} Attendees</span>
+                    <span className="text-sm font-semibold">
+                      {event.attendees} Attendees
+                    </span>
                   </div>
                   <button className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:shadow-lg transition flex items-center gap-1">
                     Register <ArrowRight className="w-4 h-4" />
@@ -259,8 +350,12 @@ export default function Home() {
       {/* CTA Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-12 text-center text-white">
-          <h2 className="text-4xl font-bold mb-4">Ready to Expand Your Network?</h2>
-          <p className="text-xl mb-8 opacity-90">Join thousands of professionals connecting at amazing events</p>
+          <h2 className="text-4xl font-bold mb-4">
+            Ready to Expand Your Network?
+          </h2>
+          <p className="text-xl mb-8 opacity-90">
+            Join thousands of professionals connecting at amazing events
+          </p>
           <button className="px-8 py-4 bg-white text-blue-600 rounded-lg text-lg font-semibold hover:shadow-xl transition">
             Create Your Profile Today
           </button>
@@ -279,33 +374,78 @@ export default function Home() {
                 <span className="text-xl font-bold">EventConnect</span>
               </div>
               <p className="text-gray-400 text-sm">
-                The ultimate platform for event networking and professional connections.
+                The ultimate platform for event networking and professional
+                connections.
               </p>
             </div>
             <div>
               <h4 className="font-semibold mb-4">Platform</h4>
               <ul className="space-y-2 text-gray-400 text-sm">
-                <li><a href="#" className="hover:text-white transition">Browse Events</a></li>
-                <li><a href="#" className="hover:text-white transition">Create Event</a></li>
-                <li><a href="#" className="hover:text-white transition">Network</a></li>
-                <li><a href="#" className="hover:text-white transition">Features</a></li>
+                <li>
+                  <a href="#" className="hover:text-white transition">
+                    Browse Events
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition">
+                    Create Event
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition">
+                    Network
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition">
+                    Features
+                  </a>
+                </li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold mb-4">Company</h4>
               <ul className="space-y-2 text-gray-400 text-sm">
-                <li><a href="#" className="hover:text-white transition">About Us</a></li>
-                <li><a href="#" className="hover:text-white transition">Careers</a></li>
-                <li><a href="#" className="hover:text-white transition">Blog</a></li>
-                <li><a href="#" className="hover:text-white transition">Contact</a></li>
+                <li>
+                  <a href="#" className="hover:text-white transition">
+                    About Us
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition">
+                    Careers
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition">
+                    Blog
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition">
+                    Contact
+                  </a>
+                </li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold mb-4">Legal</h4>
               <ul className="space-y-2 text-gray-400 text-sm">
-                <li><a href="#" className="hover:text-white transition">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-white transition">Terms of Service</a></li>
-                <li><a href="#" className="hover:text-white transition">Cookie Policy</a></li>
+                <li>
+                  <a href="#" className="hover:text-white transition">
+                    Privacy Policy
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition">
+                    Terms of Service
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition">
+                    Cookie Policy
+                  </a>
+                </li>
               </ul>
             </div>
           </div>

@@ -1,3 +1,4 @@
+
 import User from '../models/user.model.js';
 import Attendee from '../models/attendee.model.js';
 import Organiser from '../models/organiser.model.js';
@@ -306,6 +307,49 @@ export const getMe = async (req, res) => {
       success: false,
       message: 'Server error while fetching profile',
       error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+};
+
+
+export const protect = async (req, res, next) => {
+  try {
+    let token;
+
+    // Check if Authorization header is provided
+    if (
+      req.headers.authorization &&
+      req.headers.authorization.startsWith('Bearer')
+    ) {
+      token = req.headers.authorization.split(' ')[1];
+    }
+
+    if (!token) {
+      return res.status(401).json({
+        success: false,
+        message: 'Not authorized, no token provided'
+      });
+    }
+
+    // Verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
+
+    // Find user by ID from token payload
+    req.user = await User.findById(decoded.id).select('-password');
+
+    if (!req.user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    next(); // Pass control to next middleware or route handler
+  } catch (error) {
+    console.error('Auth middleware error:', error);
+    res.status(401).json({
+      success: false,
+      message: 'Not authorized, token failed or invalid'
     });
   }
 };

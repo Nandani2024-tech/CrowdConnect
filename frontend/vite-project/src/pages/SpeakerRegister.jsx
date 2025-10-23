@@ -1,58 +1,68 @@
-import { useState } from 'react';
-import { User, Mail, Lock, Mic, Tag, Linkedin, Twitter, Globe } from 'lucide-react';
+import { useState } from "react";
+import {
+  User,
+  Mail,
+  Lock,
+  Mic,
+  Tag,
+  Linkedin,
+  Twitter,
+  Globe,
+} from "lucide-react";
 
 export default function SpeakerRegister() {
   const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    bio: '',
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    bio: "",
     topics: [],
-    linkedin: '',
-    twitter: '',
-    website: ''
+    linkedin: "",
+    twitter: "",
+    website: "",
   });
 
-  const [topicInput, setTopicInput] = useState('');
+  const [topicInput, setTopicInput] = useState("");
   const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const addTopic = () => {
     if (topicInput.trim() && !formData.topics.includes(topicInput.trim())) {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        topics: [...prev.topics, topicInput.trim()]
+        topics: [...prev.topics, topicInput.trim()],
       }));
-      setTopicInput('');
+      setTopicInput("");
     }
   };
 
   const removeTopic = (topic) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      topics: prev.topics.filter(t => t !== topic)
+      topics: prev.topics.filter((t) => t !== topic),
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     const newErrors = {};
-    if (!formData.username) newErrors.username = 'Username is required';
-    if (!formData.email) newErrors.email = 'Email is required';
-    if (!formData.password) newErrors.password = 'Password is required';
+    if (!formData.username) newErrors.username = "Username is required";
+    if (!formData.email) newErrors.email = "Email is required";
+    if (!formData.password) newErrors.password = "Password is required";
     if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
+      newErrors.confirmPassword = "Passwords do not match";
     }
-    if (formData.topics.length === 0) newErrors.topics = 'At least one topic is required';
+    if (formData.topics.length === 0)
+      newErrors.topics = "At least one topic is required";
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -64,19 +74,33 @@ export default function SpeakerRegister() {
       email: formData.email,
       password: formData.password,
       bio: formData.bio,
-      role: 'speaker',
+      role: "speaker",
       speakerDetails: {
         topics: formData.topics,
         bio: formData.bio,
         socialLinks: {
           linkedin: formData.linkedin,
           twitter: formData.twitter,
-          website: formData.website
-        }
-      }
+          website: formData.website,
+        },
+      },
     };
 
-    console.log('Registration data:', registrationData);
+    try {
+      const response = await fetch("http://localhost:5000/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(registrationData),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || "Registration failed");
+      }
+      alert("Registration successful! Please log in.");
+      window.location.href = "/login";
+    } catch (err) {
+      setErrors({ api: err.message });
+    }
   };
 
   return (
@@ -86,14 +110,18 @@ export default function SpeakerRegister() {
           <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center">
             <Mic className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-3xl font-bold text-white mb-2">Speaker Registration</h1>
+          <h1 className="text-3xl font-bold text-white mb-2">
+            Speaker Registration
+          </h1>
           <p className="text-gray-400">Share your expertise with the world</p>
         </div>
 
         <div className="bg-gray-800 rounded-2xl p-8 border border-gray-700">
           <div className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Username *</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Username *
+              </label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
@@ -105,11 +133,15 @@ export default function SpeakerRegister() {
                   placeholder="Enter your username"
                 />
               </div>
-              {errors.username && <p className="text-red-400 text-sm mt-1">{errors.username}</p>}
+              {errors.username && (
+                <p className="text-red-400 text-sm mt-1">{errors.username}</p>
+              )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Email *</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Email *
+              </label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
@@ -121,11 +153,15 @@ export default function SpeakerRegister() {
                   placeholder="Enter your email"
                 />
               </div>
-              {errors.email && <p className="text-red-400 text-sm mt-1">{errors.email}</p>}
+              {errors.email && (
+                <p className="text-red-400 text-sm mt-1">{errors.email}</p>
+              )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Password *</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Password *
+              </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
@@ -137,11 +173,15 @@ export default function SpeakerRegister() {
                   placeholder="Create a password"
                 />
               </div>
-              {errors.password && <p className="text-red-400 text-sm mt-1">{errors.password}</p>}
+              {errors.password && (
+                <p className="text-red-400 text-sm mt-1">{errors.password}</p>
+              )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Confirm Password *</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Confirm Password *
+              </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
@@ -153,11 +193,17 @@ export default function SpeakerRegister() {
                   placeholder="Confirm your password"
                 />
               </div>
-              {errors.confirmPassword && <p className="text-red-400 text-sm mt-1">{errors.confirmPassword}</p>}
+              {errors.confirmPassword && (
+                <p className="text-red-400 text-sm mt-1">
+                  {errors.confirmPassword}
+                </p>
+              )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Bio</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Bio
+              </label>
               <textarea
                 name="bio"
                 value={formData.bio}
@@ -169,11 +215,15 @@ export default function SpeakerRegister() {
             </div>
 
             <div className="border-t border-gray-700 pt-6">
-              <h3 className="text-lg font-semibold text-white mb-4">Speaker Details</h3>
-              
+              <h3 className="text-lg font-semibold text-white mb-4">
+                Speaker Details
+              </h3>
+
               <div className="space-y-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">Topics of Expertise *</label>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    Topics of Expertise *
+                  </label>
                   <div className="flex gap-2 mb-3">
                     <div className="relative flex-1">
                       <Tag className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -181,7 +231,9 @@ export default function SpeakerRegister() {
                         type="text"
                         value={topicInput}
                         onChange={(e) => setTopicInput(e.target.value)}
-                        onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addTopic())}
+                        onKeyPress={(e) =>
+                          e.key === "Enter" && (e.preventDefault(), addTopic())
+                        }
                         className="w-full bg-gray-900 border border-gray-700 rounded-lg pl-10 pr-4 py-3 text-white focus:outline-none focus:border-orange-500 transition-colors"
                         placeholder="Add topic (press Enter)"
                       />
@@ -211,12 +263,16 @@ export default function SpeakerRegister() {
                       </span>
                     ))}
                   </div>
-                  {errors.topics && <p className="text-red-400 text-sm mt-1">{errors.topics}</p>}
+                  {errors.topics && (
+                    <p className="text-red-400 text-sm mt-1">{errors.topics}</p>
+                  )}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-4">Social Links</label>
-                  
+                  <label className="block text-sm font-medium text-gray-300 mb-4">
+                    Social Links
+                  </label>
+
                   <div className="space-y-4">
                     <div className="relative">
                       <Linkedin className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -259,6 +315,11 @@ export default function SpeakerRegister() {
             </div>
           </div>
 
+          {/* Insert error display just before the submit button */}
+          {errors.api && (
+            <div className="text-red-400 text-center mt-4">{errors.api}</div>
+          )}
+
           <button
             onClick={handleSubmit}
             className="w-full mt-8 py-4 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold rounded-lg transition-all transform hover:scale-105"
@@ -267,8 +328,11 @@ export default function SpeakerRegister() {
           </button>
 
           <p className="text-center text-gray-400 mt-6">
-            Already have an account?{' '}
-            <a href="/login" className="text-orange-400 hover:text-orange-300 font-semibold">
+            Already have an account?{" "}
+            <a
+              href="/login"
+              className="text-orange-400 hover:text-orange-300 font-semibold"
+            >
               Sign in
             </a>
           </p>

@@ -1,57 +1,68 @@
-import { useState } from 'react';
-import { User, Mail, Lock, Briefcase, Building, GraduationCap, Tag } from 'lucide-react';
+import { useState } from "react";
+import {
+  User,
+  Mail,
+  Lock,
+  Briefcase,
+  Building,
+  GraduationCap,
+  Tag,
+} from "lucide-react";
 
 export default function AttendeeRegister() {
   const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    bio: '',
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    bio: "",
     isStudent: false,
-    occupation: '',
-    company: '',
-    interests: []
+    occupation: "",
+    company: "",
+    interests: [],
   });
 
-  const [interestInput, setInterestInput] = useState('');
+  const [interestInput, setInterestInput] = useState("");
   const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
   const addInterest = () => {
-    if (interestInput.trim() && !formData.interests.includes(interestInput.trim())) {
-      setFormData(prev => ({
+    if (
+      interestInput.trim() &&
+      !formData.interests.includes(interestInput.trim())
+    ) {
+      setFormData((prev) => ({
         ...prev,
-        interests: [...prev.interests, interestInput.trim()]
+        interests: [...prev.interests, interestInput.trim()],
       }));
-      setInterestInput('');
+      setInterestInput("");
     }
   };
 
   const removeInterest = (interest) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      interests: prev.interests.filter(i => i !== interest)
+      interests: prev.interests.filter((i) => i !== interest),
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Basic validation
     const newErrors = {};
-    if (!formData.username) newErrors.username = 'Username is required';
-    if (!formData.email) newErrors.email = 'Email is required';
-    if (!formData.password) newErrors.password = 'Password is required';
+    if (!formData.username) newErrors.username = "Username is required";
+    if (!formData.email) newErrors.email = "Email is required";
+    if (!formData.password) newErrors.password = "Password is required";
     if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
+      newErrors.confirmPassword = "Passwords do not match";
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -65,17 +76,30 @@ export default function AttendeeRegister() {
       email: formData.email,
       password: formData.password,
       bio: formData.bio,
-      role: 'attendee',
+      role: "attendee",
       attendeeDetails: {
         isStudent: formData.isStudent,
         occupation: formData.occupation,
         company: formData.company,
-        interests: formData.interests
-      }
+        interests: formData.interests,
+      },
     };
 
-    console.log('Registration data:', registrationData);
-    // API call would go here
+    try {
+      const response = await fetch("http://localhost:5000/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(registrationData),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || "Registration failed");
+      }
+      alert("Registration successful! Please log in.");
+      window.location.href = "/login";
+    } catch (err) {
+      setErrors({ api: err.message });
+    }
   };
 
   return (
@@ -85,15 +109,22 @@ export default function AttendeeRegister() {
           <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
             <User className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-3xl font-bold text-white mb-2">Attendee Registration</h1>
+          <h1 className="text-3xl font-bold text-white mb-2">
+            Attendee Registration
+          </h1>
           <p className="text-gray-400">Join events and connect with speakers</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="bg-gray-800 rounded-2xl p-8 border border-gray-700">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-gray-800 rounded-2xl p-8 border border-gray-700"
+        >
           {/* Basic Info */}
           <div className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Username *</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Username *
+              </label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
@@ -105,11 +136,15 @@ export default function AttendeeRegister() {
                   placeholder="Enter your username"
                 />
               </div>
-              {errors.username && <p className="text-red-400 text-sm mt-1">{errors.username}</p>}
+              {errors.username && (
+                <p className="text-red-400 text-sm mt-1">{errors.username}</p>
+              )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Email *</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Email *
+              </label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
@@ -121,11 +156,15 @@ export default function AttendeeRegister() {
                   placeholder="Enter your email"
                 />
               </div>
-              {errors.email && <p className="text-red-400 text-sm mt-1">{errors.email}</p>}
+              {errors.email && (
+                <p className="text-red-400 text-sm mt-1">{errors.email}</p>
+              )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Password *</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Password *
+              </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
@@ -137,11 +176,15 @@ export default function AttendeeRegister() {
                   placeholder="Create a password"
                 />
               </div>
-              {errors.password && <p className="text-red-400 text-sm mt-1">{errors.password}</p>}
+              {errors.password && (
+                <p className="text-red-400 text-sm mt-1">{errors.password}</p>
+              )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Confirm Password *</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Confirm Password *
+              </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
@@ -153,11 +196,17 @@ export default function AttendeeRegister() {
                   placeholder="Confirm your password"
                 />
               </div>
-              {errors.confirmPassword && <p className="text-red-400 text-sm mt-1">{errors.confirmPassword}</p>}
+              {errors.confirmPassword && (
+                <p className="text-red-400 text-sm mt-1">
+                  {errors.confirmPassword}
+                </p>
+              )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Bio</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Bio
+              </label>
               <textarea
                 name="bio"
                 value={formData.bio}
@@ -178,14 +227,15 @@ export default function AttendeeRegister() {
                 className="w-4 h-4 rounded border-gray-700 bg-gray-900 text-blue-500 focus:ring-blue-500"
               />
               <label className="flex items-center text-gray-300">
-                <GraduationCap className="w-5 h-5 mr-2" />
-                I am a student
+                <GraduationCap className="w-5 h-5 mr-2" />I am a student
               </label>
             </div>
 
             {/* Occupation */}
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Occupation</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Occupation
+              </label>
               <div className="relative">
                 <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
@@ -201,7 +251,9 @@ export default function AttendeeRegister() {
 
             {/* Company */}
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Company</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Company
+              </label>
               <div className="relative">
                 <Building className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
@@ -217,7 +269,9 @@ export default function AttendeeRegister() {
 
             {/* Interests */}
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Interests</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Interests
+              </label>
               <div className="flex gap-2 mb-3">
                 <div className="relative flex-1">
                   <Tag className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -225,7 +279,9 @@ export default function AttendeeRegister() {
                     type="text"
                     value={interestInput}
                     onChange={(e) => setInterestInput(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addInterest())}
+                    onKeyPress={(e) =>
+                      e.key === "Enter" && (e.preventDefault(), addInterest())
+                    }
                     className="w-full bg-gray-900 border border-gray-700 rounded-lg pl-10 pr-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors"
                     placeholder="Add interest (press Enter)"
                   />
@@ -258,6 +314,11 @@ export default function AttendeeRegister() {
             </div>
           </div>
 
+          {/* Insert error display just before the submit button */}
+          {errors.api && (
+            <div className="text-red-400 text-center mt-4">{errors.api}</div>
+          )}
+
           {/* Submit Button */}
           <button
             type="submit"
@@ -267,8 +328,11 @@ export default function AttendeeRegister() {
           </button>
 
           <p className="text-center text-gray-400 mt-6">
-            Already have an account?{' '}
-            <a href="/login" className="text-blue-400 hover:text-blue-300 font-semibold">
+            Already have an account?{" "}
+            <a
+              href="/login"
+              className="text-blue-400 hover:text-blue-300 font-semibold"
+            >
               Sign in
             </a>
           </p>

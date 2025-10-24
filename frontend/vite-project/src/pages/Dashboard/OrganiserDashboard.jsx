@@ -9,11 +9,13 @@ import SpeakerTeamManagement from "../../components/dashboard/Organiser/SpeakerT
 import EventReports from "../../components/dashboard/Organiser/EventReports";
 import OrganiserNotifications from "../../components/dashboard/Organiser/OrganiserNotifications";
 import OrganiserProfileOverview from "../../components/dashboard/Organiser/OrganiserProfileOverview";
+import CreateEventForm from "../../components/dashboard/Organiser/CreateEventForm";
 
-// REMOVE all mock imports here
+
 
 export default function OrganiserDashboard() {
   const [organiser, setOrganiser] = useState(null);
+  const [showCreateEvent, setShowCreateEvent] = useState(false);
 
   useEffect(() => {
     // Fetch organiser profile from backend
@@ -21,8 +23,8 @@ export default function OrganiserDashboard() {
       const token = localStorage.getItem("token"); // Assuming token is stored at login
       const res = await fetch("http://localhost:5000/api/organiser/me", {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
       const json = await res.json();
       if (json.success) {
@@ -32,10 +34,21 @@ export default function OrganiserDashboard() {
     fetchOrganiserProfile();
   }, []);
 
+  if (showCreateEvent) {
+    return (
+      <CreateEventForm
+        onCancel={() => setShowCreateEvent(false)}
+        // onSubmit={...}
+      />
+    );
+  }
+
   if (!organiser) {
     return (
       <div className="min-h-screen bg-slate-900 flex items-center justify-center">
-        <span className="text-cyan-400 text-xl">Loading your organiser dashboard...</span>
+        <span className="text-cyan-400 text-xl">
+          Loading your organiser dashboard...
+        </span>
       </div>
     );
   }
@@ -47,13 +60,15 @@ export default function OrganiserDashboard() {
         <OrganiserWelcomeBanner organiser={organiser} />
 
         {/* Quick Actions */}
-        <OrganiserQuickActions />
+        <OrganiserQuickActions onCreateEvent={() => setShowCreateEvent(true)} />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Column */}
           <div className="lg:col-span-2 space-y-6">
             <EventsManaged events={organiser.eventsOrganized || []} />
-            <RegistrationsOverview registrations={organiser.registrations || []} />
+            <RegistrationsOverview
+              registrations={organiser.registrations || []}
+            />
             <OrganiserAnalytics analytics={organiser.analytics || {}} />
             <SpeakerTeamManagement team={organiser.team || []} />
             <EventReports reports={organiser.reports || []} />
@@ -62,7 +77,9 @@ export default function OrganiserDashboard() {
           {/* Right Sidebar */}
           <div className="space-y-6">
             <OrganiserProfileOverview organiser={organiser} />
-            <OrganiserNotifications notifications={organiser.notifications || []} />
+            <OrganiserNotifications
+              notifications={organiser.notifications || []}
+            />
           </div>
         </div>
       </div>

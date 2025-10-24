@@ -51,7 +51,7 @@ const SpeakerAnalytics = ({ analytics }) => (
       <h3 className="text-white font-semibold mb-4">Sessions Over Time</h3>
 
       <div className="space-y-3 max-w-full overflow-x-auto">
-        {[...analytics.chartData].map((item) => (
+        {[...(analytics.chartData || [])].map((item) => (
           <div key={item.month}>
             <div className="flex items-center justify-between mb-1">
               <span className="text-sm text-slate-300">{item.month}</span>

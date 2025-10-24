@@ -10,21 +10,18 @@ const SpeakerProfileOverview = ({ speaker }) => (
         Edit Profile
       </button>
     </div>
-
     <div className="space-y-4">
-      <p className="text-white font-semibold text-lg">{speaker.name}</p>
+      <p className="text-white font-semibold text-lg">{speaker.userId?.username || "Speaker"}</p>
       <p className="text-slate-300 italic">{speaker.bio}</p>
-
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-1 bg-slate-700/50 p-2 rounded text-sm text-cyan-400">
-          Topics: {speaker.topics.join(', ')}
+          Topics: {(speaker.topics || []).join(', ')}
         </div>
       </div>
-
       <div className="flex flex-wrap gap-3 mt-3">
         {speaker.socialLinks?.linkedin && (
           <a
-            href={`https://${speaker.socialLinks.linkedin}`}
+            href={speaker.socialLinks.linkedin}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1 text-cyan-400 hover:text-cyan-300"
@@ -33,10 +30,9 @@ const SpeakerProfileOverview = ({ speaker }) => (
             LinkedIn
           </a>
         )}
-
         {speaker.socialLinks?.twitter && (
           <a
-            href={`https://${speaker.socialLinks.twitter}`}
+            href={speaker.socialLinks.twitter}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1 text-cyan-400 hover:text-cyan-300"
@@ -45,7 +41,6 @@ const SpeakerProfileOverview = ({ speaker }) => (
             Twitter
           </a>
         )}
-
         {speaker.socialLinks?.website && (
           <a
             href={speaker.socialLinks.website}
@@ -61,5 +56,4 @@ const SpeakerProfileOverview = ({ speaker }) => (
     </div>
   </div>
 );
-
 export default SpeakerProfileOverview;

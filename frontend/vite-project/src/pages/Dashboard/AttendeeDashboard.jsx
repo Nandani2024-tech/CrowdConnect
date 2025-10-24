@@ -23,7 +23,7 @@ export default function AttendeeDashboard() {
     async function fetchAttendee() {
       const token = localStorage.getItem("token");
       const res = await fetch("http://localhost:5000/api/attendee/me", {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
       const json = await res.json();
       if (json.success) setAttendee(json.data);
@@ -31,15 +31,16 @@ export default function AttendeeDashboard() {
 
     // Fetch events (example endpoint—replace with your actual events endpoint)
     async function fetchEvents() {
-      const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:5000/api/events/my", {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      // Expecting: { success: true, data: { upcoming, recommended, past, calendar } }
+      const res = await fetch("http://localhost:5000/api/events");
       const json = await res.json();
-      if (json.success) setEventData(json.data);
+      if (json.success)
+        setEventData({
+          upcoming: json.data,
+          recommended: [],
+          past: [],
+          calendar: [],
+        });
     }
-
     fetchAttendee();
     fetchEvents();
   }, []);

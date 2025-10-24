@@ -15,7 +15,7 @@ import {
   ArrowLeft,
 } from "lucide-react";
 
-const CreateEventForm = ({ onSubmit, onCancel }) => {
+const CreateEventForm = ({ onEventCreated, onCancel }) => {
   const [formData, setFormData] = useState({
     eventName: "",
     description: "",
@@ -75,15 +75,10 @@ const CreateEventForm = ({ onSubmit, onCancel }) => {
         }));
         return;
       }
-
       setFormData((prev) => ({ ...prev, posterImage: file }));
-
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
+      reader.onloadend = () => setImagePreview(reader.result);
       reader.readAsDataURL(file);
-
       if (errors.posterImage) {
         setErrors((prev) => ({ ...prev, posterImage: "" }));
       }
@@ -97,19 +92,16 @@ const CreateEventForm = ({ onSubmit, onCancel }) => {
 
   const validate = () => {
     const newErrors = {};
-
     if (!formData.eventName.trim()) {
       newErrors.eventName = "Event name is required";
     } else if (formData.eventName.length < 5) {
       newErrors.eventName = "Event name must be at least 5 characters";
     }
-
     if (!formData.description.trim()) {
       newErrors.description = "Description is required";
     } else if (formData.description.length < 20) {
       newErrors.description = "Description must be at least 20 characters";
     }
-
     if (!formData.eventDate) {
       newErrors.eventDate = "Event date is required";
     } else {
@@ -120,31 +112,25 @@ const CreateEventForm = ({ onSubmit, onCancel }) => {
         newErrors.eventDate = "Event date cannot be in the past";
       }
     }
-
     if (!formData.startTime) {
       newErrors.startTime = "Start time is required";
     }
-
     if (!formData.endTime) {
       newErrors.endTime = "End time is required";
     } else if (formData.startTime && formData.endTime <= formData.startTime) {
       newErrors.endTime = "End time must be after start time";
     }
-
     if (!formData.venue.trim()) {
       newErrors.venue = "Venue/Location is required";
     }
-
     if (!formData.category) {
       newErrors.category = "Category is required";
     }
-
     if (!formData.maxParticipants) {
       newErrors.maxParticipants = "Max participants is required";
     } else if (formData.maxParticipants < 1) {
       newErrors.maxParticipants = "Must be at least 1 participant";
     }
-
     if (!formData.registrationDeadline) {
       newErrors.registrationDeadline = "Registration deadline is required";
     } else {
@@ -154,7 +140,6 @@ const CreateEventForm = ({ onSubmit, onCancel }) => {
         newErrors.registrationDeadline = "Deadline must be before event date";
       }
     }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -163,7 +148,6 @@ const CreateEventForm = ({ onSubmit, onCancel }) => {
     e.preventDefault();
     if (!validate()) return;
     setIsSubmitting(true);
-
     try {
       const token = localStorage.getItem("token");
       const payload = {
@@ -171,8 +155,7 @@ const CreateEventForm = ({ onSubmit, onCancel }) => {
         maxParticipants: Number(formData.maxParticipants),
         ticketPrice: Number(formData.ticketPrice),
       };
-      delete payload.posterImage; // If not using
-
+      delete payload.posterImage;
       const res = await fetch("http://localhost:5000/api/events", {
         method: "POST",
         headers: {
@@ -181,7 +164,6 @@ const CreateEventForm = ({ onSubmit, onCancel }) => {
         },
         body: JSON.stringify(payload),
       });
-
       const result = await res.json();
       if (!res.ok) {
         setErrors({
@@ -205,9 +187,8 @@ const CreateEventForm = ({ onSubmit, onCancel }) => {
           tags: "",
           posterImage: null,
         });
-        setImagePreview(null); // Clear image preview too
-
-        if (onSubmit) onSubmit(result.data);
+        setImagePreview(null);
+        if (onEventCreated) onEventCreated(result.data);
         alert("Event created successfully! 🎉");
       }
     } catch (error) {
@@ -321,7 +302,6 @@ const CreateEventForm = ({ onSubmit, onCancel }) => {
                   </p>
                 )}
               </div>
-
               <div>
                 <label className="block text-white font-medium mb-2">
                   <Clock className="w-4 h-4 inline mr-1" />
@@ -343,7 +323,6 @@ const CreateEventForm = ({ onSubmit, onCancel }) => {
                   </p>
                 )}
               </div>
-
               <div>
                 <label className="block text-white font-medium mb-2">
                   <Clock className="w-4 h-4 inline mr-1" />
@@ -391,7 +370,6 @@ const CreateEventForm = ({ onSubmit, onCancel }) => {
                   </p>
                 )}
               </div>
-
               <div>
                 <label className="block text-white font-medium mb-2">
                   Event Type <span className="text-red-400">*</span>
@@ -438,7 +416,6 @@ const CreateEventForm = ({ onSubmit, onCancel }) => {
                   </p>
                 )}
               </div>
-
               <div>
                 <label className="block text-white font-medium mb-2">
                   <Users className="w-4 h-4 inline mr-1" />
@@ -490,7 +467,6 @@ const CreateEventForm = ({ onSubmit, onCancel }) => {
                   </p>
                 )}
               </div>
-
               <div>
                 <label className="block text-white font-medium mb-2">
                   Ticket Price (₹)
@@ -549,7 +525,6 @@ const CreateEventForm = ({ onSubmit, onCancel }) => {
                 <ImageIcon className="w-4 h-4 inline mr-1" />
                 Event Poster/Image (Optional)
               </label>
-
               {!imagePreview ? (
                 <div className="border-2 border-dashed border-slate-600 rounded-lg p-12 text-center hover:border-cyan-500 transition-colors bg-slate-700/30">
                   <input
@@ -589,7 +564,6 @@ const CreateEventForm = ({ onSubmit, onCancel }) => {
                   </div>
                 </div>
               )}
-
               {errors.posterImage && (
                 <p className="text-red-400 text-sm mt-2 flex items-center gap-1">
                   <AlertCircle className="w-4 h-4" />
@@ -627,6 +601,9 @@ const CreateEventForm = ({ onSubmit, onCancel }) => {
                 )}
               </button>
             </div>
+            {errors.api && (
+              <div className="text-red-400 text-center py-2">{errors.api}</div>
+            )}
           </form>
         </div>
       </div>

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { mockEvents } from "../mockData/mockEvents";
 
 export default function EventDetails() {
   const { id } = useParams();
@@ -9,9 +8,12 @@ export default function EventDetails() {
   const [registered, setRegistered] = useState(false);
 
   useEffect(() => {
-    // Find event based on id from route
-    const found = mockEvents.find(ev => ev.id === id);
-    setEvent(found);
+    fetch(`http://localhost:5000/api/events/${id}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) setEvent(data.data);
+        else setEvent(null);
+      });
 
     const registeredEvents = JSON.parse(localStorage.getItem("registeredEvents") || "[]");
     setRegistered(registeredEvents.includes(id));
@@ -48,15 +50,15 @@ export default function EventDetails() {
         </button>
         <div className="flex items-center gap-6 mb-6">
           <div className="w-20 h-20 bg-slate-700 flex items-center justify-center text-4xl rounded-full">
-            {event.cover}
+            {event.category ? event.category.charAt(0) : "E"}
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-white mb-1">{event.title}</h1>
+            <h1 className="text-3xl font-bold text-white mb-1">{event.eventName}</h1>
             <div className="text-slate-400 text-md mb-1">
-              {new Date(event.date).toLocaleString()} &middot; {event.location}
+              {new Date(event.eventDate).toLocaleString()} &middot; {event.venue}
             </div>
             <div className="flex flex-wrap gap-2 mt-1">
-              {event.tags.map(tag => (
+              {event.tags && event.tags.map(tag => (
                 <span key={tag} className="px-3 py-1 text-xs bg-cyan-600/20 text-cyan-300 rounded-full">{tag}</span>
               ))}
             </div>
@@ -64,7 +66,7 @@ export default function EventDetails() {
         </div>
         <p className="text-slate-200 mb-5 text-lg">{event.description}</p>
         <div className="flex items-center gap-4 mb-5">
-          <span className="text-slate-300">{event.attendees} attendees expected</span>
+          <span className="text-slate-300">{event.maxParticipants} participants expected</span>
         </div>
         {registered ? (
           <span className="px-6 py-2 rounded bg-green-500/20 text-green-400 font-semibold">

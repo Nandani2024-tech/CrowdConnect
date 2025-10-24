@@ -46,7 +46,7 @@ const EventsManaged = ({ events }) => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {filteredEvents.map(event => (
           <div
-            key={event.id}
+            key={event._id}
             className="bg-slate-700/50 rounded-lg p-4 hover:bg-slate-700 transition-all border border-slate-600/50 hover:border-purple-500/50"
           >
             <div className="flex items-start justify-between mb-3">

@@ -11,34 +11,46 @@ import OrganiserNotifications from "../../components/dashboard/Organiser/Organis
 import OrganiserProfileOverview from "../../components/dashboard/Organiser/OrganiserProfileOverview";
 import CreateEventForm from "../../components/dashboard/Organiser/CreateEventForm";
 
-
-
 export default function OrganiserDashboard() {
   const [organiser, setOrganiser] = useState(null);
   const [showCreateEvent, setShowCreateEvent] = useState(false);
 
   useEffect(() => {
-    // Fetch organiser profile from backend
-    const fetchOrganiserProfile = async () => {
-      const token = localStorage.getItem("token"); // Assuming token is stored at login
-      const res = await fetch("http://localhost:5000/api/organiser/me", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const json = await res.json();
-      if (json.success) {
-        setOrganiser(json.data);
-      }
-    };
-    fetchOrganiserProfile();
-  }, []);
+  const fetchData = async () => {
+    const token = localStorage.getItem("token");
+    // Fetch organiser profile
+    const profileRes = await fetch("http://localhost:5000/api/organiser/me", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const profileJson = await profileRes.json();
+    let organiser = profileJson.data;
+
+    // Fetch events managed by this organiser -- make sure your backend supports this!
+    const eventsRes = await fetch("http://localhost:5000/api/events?organiserId=" + organiser._id, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const eventsJson = await eventsRes.json();
+    organiser.eventsOrganized = eventsJson.data;
+
+    setOrganiser(organiser);
+  };
+  fetchData();
+}, []);
+
+
+  const handleEventCreated = (newEvent) => {
+    setOrganiser((prev) => ({
+      ...prev,
+      eventsOrganized: [newEvent, ...(prev?.eventsOrganized || [])],
+    }));
+    setShowCreateEvent(false);
+  };
 
   if (showCreateEvent) {
     return (
       <CreateEventForm
         onCancel={() => setShowCreateEvent(false)}
-        // onSubmit={...}
+        onEventCreated={handleEventCreated}
       />
     );
   }

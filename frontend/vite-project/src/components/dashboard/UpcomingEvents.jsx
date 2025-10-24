@@ -22,7 +22,7 @@ const UpcomingEvents = ({ events }) => {
       <div className="space-y-4">
         {events.map((event) => (
           <div
-            key={event.id}
+            key={event._id}
             className="bg-slate-700/50 rounded-lg p-4 hover:bg-slate-700 transition-all border border-slate-600/50 hover:border-cyan-500/50"
           >
             <div className="flex items-start gap-4">

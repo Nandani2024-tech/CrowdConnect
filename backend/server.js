@@ -5,6 +5,10 @@ import dotenv from 'dotenv';
 import authRoutes from './routes/auth.routes.js';
 import attendeeRoutes from './routes/attendee.routes.js';
 import organiserRoutes from './routes/organiser.routes.js';
+import speakerRoutes from './routes/speaker.routes.js';
+
+
+
 
 
 // Load environment variables
@@ -40,6 +44,8 @@ app.use('/api/auth', authRoutes);
 // app.use('/api/auth', authRoutes);
 app.use('/api/organiser', organiserRoutes);
 app.use('/api/attendee', attendeeRoutes);
+app.use('/api/speaker', speakerRoutes);
+
 
 // Health check route
 app.get('/api/health', (req, res) => {

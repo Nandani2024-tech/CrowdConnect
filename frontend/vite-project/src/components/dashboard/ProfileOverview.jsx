@@ -3,6 +3,12 @@ import React from 'react';
 import { Edit2, Briefcase, Building, MapPin, Tag } from 'lucide-react';
 
 const ProfileOverview = ({ user }) => {
+  const occupation = user?.occupation || "Not specified";
+  const company = user?.company || "Not specified";
+  const location = user?.location || "Not specified";
+  const bio = user?.bio || "No bio provided";
+  const interests = user?.interests || []; // <---- DEFAULT EMPTY ARRAY IF UNDEFINED
+  const profileComplete = user?.stats?.profileComplete ?? 0;
   return (
     <div className="bg-slate-800 rounded-lg p-6 shadow-lg">
       <div className="flex items-center justify-between mb-4">
@@ -49,7 +55,7 @@ const ProfileOverview = ({ user }) => {
             Interests
           </label>
           <div className="flex flex-wrap gap-2 mt-2">
-            {user.interests.map((interest, idx) => (
+            {interests.map((interest, idx) => (
               <span 
                 key={idx} 
                 className="bg-cyan-500/20 text-cyan-300 px-3 py-1 rounded-full text-sm hover:bg-cyan-500/30 transition-colors cursor-pointer"
@@ -63,15 +69,15 @@ const ProfileOverview = ({ user }) => {
         <div className="pt-4 border-t border-slate-700">
           <div className="flex items-center justify-between mb-2">
             <span className="text-slate-400 text-sm">Profile Completion</span>
-            <span className="text-white font-semibold">{user.stats.profileComplete}%</span>
+            <span className="text-white font-semibold">{profileComplete}%</span>
           </div>
           <div className="w-full bg-slate-700 rounded-full h-2 overflow-hidden">
             <div 
               className="bg-gradient-to-r from-cyan-500 to-blue-500 h-2 rounded-full transition-all duration-500"
-              style={{ width: `${user.stats.profileComplete}%` }}
+              style={{ width: `${profileComplete}%` }}
             />
           </div>
-          {user.stats.profileComplete < 100 && (
+          {profileComplete < 100 && (
             <p className="text-slate-400 text-xs mt-2">
               Complete your profile to unlock all features
             </p>

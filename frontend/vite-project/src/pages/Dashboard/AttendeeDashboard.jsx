@@ -11,8 +11,7 @@ import PastEvents from "../../components/dashboard/PastEvents";
 import MySchedule from "../../components/dashboard/MySchedule";
 
 // Named imports from mockData files
-import { 
-  mockUserData, 
+import {  
   mockConnections, 
   mockNotifications 
 } from "../../mockData/attendeeData";
@@ -24,11 +23,14 @@ import {
 } from "../../mockData/eventsData";
 
 export default function AttendeeDashboard() {
+  const storedUser = JSON.parse(localStorage.getItem("user")) || {};
+
+  
   return (
     <div className="min-h-screen bg-slate-900 p-4 md:p-6">
       <div className="max-w-7xl mx-auto">
         {/* Welcome Banner - Full Width */}
-        <WelcomeBanner user={mockUserData} />
+        <WelcomeBanner user={storedUser} />
 
         {/* Main Dashboard Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -54,7 +56,7 @@ export default function AttendeeDashboard() {
           {/* Right Sidebar Column */}
           <div className="space-y-6">
             {/* Profile Overview */}
-            <ProfileOverview user={mockUserData} />
+            <ProfileOverview user={storedUser} />
             
             {/* Notifications */}
             <Notifications notifications={mockNotifications || []} />

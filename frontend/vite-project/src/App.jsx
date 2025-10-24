@@ -1,15 +1,22 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 
-import Home from './pages/Home.jsx';
-import Login from './pages/Login.jsx';
-import AttendeeDashboard from './pages/Dashboard/AttendeeDashboard.jsx';
-import OrganiserDashboard from './pages/Dashboard/OrganiserDashboard.jsx';
-import SpeakerDashboard from './pages/Dashboard/SpeakerDashboard.jsx';
-import Register from './pages/Register.jsx';
-import AttendeeRegister from './pages/AttendeeRegister.jsx';
-import OrganiserRegister from './pages/OrganiserRegister.jsx';
-import SpeakerRegister from './pages/SpeakerRegister.jsx';
+import Home from "./pages/Home.jsx";
+import Login from "./pages/Login.jsx";
+import AttendeeDashboard from "./pages/Dashboard/AttendeeDashboard.jsx";
+import OrganiserDashboard from "./pages/Dashboard/OrganiserDashboard.jsx";
+import SpeakerDashboard from "./pages/Dashboard/SpeakerDashboard.jsx";
+import Register from "./pages/Register.jsx";
+import AttendeeRegister from "./pages/AttendeeRegister.jsx";
+import OrganiserRegister from "./pages/OrganiserRegister.jsx";
+import SpeakerRegister from "./pages/SpeakerRegister.jsx";
+import AllEvents from "./pages/AllEvents";
+import EventDetails from "./pages/EventDetails";
 
 function App() {
   // Check if user is authenticated by token existence in localStorage
@@ -24,13 +31,14 @@ function App() {
         <Route path="/attendee/dashboard" element={<AttendeeDashboard />} />
         <Route path="/organiser/dashboard" element={<OrganiserDashboard />} />
         <Route path="/speaker/dashboard" element={<SpeakerDashboard />} />
-        
+
         <Route path="/register" element={<Register />} />
         <Route path="/register/attendee" element={<AttendeeRegister />} />
         <Route path="/register/organiser" element={<OrganiserRegister />} />
         <Route path="/register/speaker" element={<SpeakerRegister />} />
 
-
+        <Route path="/events" element={<AllEvents />} />
+        <Route path="/events/:id" element={<EventDetails />} />
 
         {/* <Route path="/login" element={!token ? <LoginPage /> : <Navigate to="/dashboard" />} />
         <Route
@@ -49,9 +57,6 @@ function App() {
             )
           }
         /> */}
-
-
-
 
         {/* Optional: add signup route */}
         {/* <Route path="/signup" element={<SignupPage />} /> */}

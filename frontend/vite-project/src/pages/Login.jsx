@@ -67,11 +67,13 @@ export default function Login() {
       }
 
       console.log("Login successful:", data);
+      const { user, token } = data.data;
 
       // NOTE: In production, uncomment these lines to use localStorage
       // const tokenExpiry = formData.rememberMe ? 7 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000;
-      // localStorage.setItem('token', data.token);
-      // localStorage.setItem('user', JSON.stringify(data.user));
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+
       // localStorage.setItem('tokenExpiry', Date.now() + tokenExpiry);
 
       const dashboardRoutes = {
@@ -80,8 +82,10 @@ export default function Login() {
         speaker: "/speaker/dashboard",
       };
 
-      const { user, role, token } = data.data; // changed here
-      const redirectPath = dashboardRoutes[user.role] || "/dashboard";
+      
+
+      const redirectPath = dashboardRoutes[user.role] || "/";
+      navigate(redirectPath);
 
       // Optionally store token and user in localStorage
 

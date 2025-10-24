@@ -211,9 +211,13 @@ export default function Home() {
             Discover events, showcase your projects, and grow your network.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <button className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg text-lg font-semibold hover:shadow-xl transition flex items-center gap-2">
+            <button
+              className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg text-lg font-semibold hover:shadow-xl transition flex items-center gap-2"
+              onClick={() => navigate("/register")}
+            >
               Get Started <ArrowRight className="w-5 h-5" />
             </button>
+
             <button className="px-8 py-4 bg-white text-gray-700 rounded-lg text-lg font-semibold border-2 border-gray-200 hover:border-blue-600 transition">
               Explore Events
             </button>
@@ -331,7 +335,10 @@ export default function Home() {
                       {event.attendees} Attendees
                     </span>
                   </div>
-                  <button className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:shadow-lg transition flex items-center gap-1">
+                  <button
+                    className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:shadow-lg transition flex items-center gap-1"
+                    onClick={() => navigate("/register")}
+                  >
                     Register <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
@@ -356,7 +363,10 @@ export default function Home() {
           <p className="text-xl mb-8 opacity-90">
             Join thousands of professionals connecting at amazing events
           </p>
-          <button className="px-8 py-4 bg-white text-blue-600 rounded-lg text-lg font-semibold hover:shadow-xl transition">
+          <button
+            className="px-8 py-4 bg-white text-blue-600 rounded-lg text-lg font-semibold hover:shadow-xl transition"
+            onClick={() => navigate("/register")}
+          >
             Create Your Profile Today
           </button>
         </div>

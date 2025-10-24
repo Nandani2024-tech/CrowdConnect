@@ -26,7 +26,20 @@ export default function AttendeeDashboard() {
         headers: { Authorization: `Bearer ${token}` },
       });
       const json = await res.json();
-      if (json.success) setAttendee(json.data);
+      if (json.success) {
+        const attendeeData = json.data;
+        // Add a stats property containing the eventsRegistered count
+        const stats = {
+          eventsRegistered: attendeeData.registeredEvents
+            ? attendeeData.registeredEvents.length
+            : 0,
+          connections: attendeeData.connections
+            ? attendeeData.connections.length
+            : 0,
+          profileComplete: attendeeData.profileComplete || 0, // Adjust this to your logic if needed
+        };
+        setAttendee({ ...attendeeData, stats });
+      }
     }
 
     // Fetch events (example endpoint—replace with your actual events endpoint)
@@ -57,7 +70,7 @@ export default function AttendeeDashboard() {
     <div className="min-h-screen bg-slate-900 p-4 md:p-6">
       <div className="max-w-7xl mx-auto">
         {/* Welcome Banner - Full Width */}
-        <WelcomeBanner user={attendee.userId || attendee} />
+        <WelcomeBanner user={attendee} />
 
         {/* Main Dashboard Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

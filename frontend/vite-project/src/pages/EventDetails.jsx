@@ -6,35 +6,88 @@ export default function EventDetails() {
   const navigate = useNavigate();
   const [event, setEvent] = useState(null);
   const [registered, setRegistered] = useState(false);
+  const [notFound, setNotFound] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/events/${id}`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) setEvent(data.data);
-        else setEvent(null);
-      });
+    if (!id || id === "undefined") {
+      setNotFound(true);
+      setLoading(false);
+      return;
+    }
 
-    const registeredEvents = JSON.parse(localStorage.getItem("registeredEvents") || "[]");
-    setRegistered(registeredEvents.includes(id));
+    // Fetch event details
+    fetch(`http://localhost:5000/api/events/${id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          setEvent(data.data);
+          setNotFound(false);
+        } else {
+          setEvent(null);
+          setNotFound(true);
+        }
+      })
+      .catch(() => setNotFound(true));
+
+    // Fetch registration status for this event for the logged-in user
+    const token = localStorage.getItem("token");
+    fetch(`http://localhost:5000/api/attendee/events/${id}/registered`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setRegistered(!!data.registered);
+        setLoading(false);
+      })
+      .catch(() => setRegistered(false));
   }, [id]);
 
-  const handleRegister = () => {
-    const registeredEvents = JSON.parse(localStorage.getItem("registeredEvents") || "[]");
-    if (!registeredEvents.includes(id)) {
-      registeredEvents.push(id);
-      localStorage.setItem("registeredEvents", JSON.stringify(registeredEvents));
-      setRegistered(true);
+  const handleRegister = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const res = await fetch(
+        `http://localhost:5000/api/attendee/events/${id}/register`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const data = await res.json();
+      if (data.success) {
+        setRegistered(true);
+        // Optionally, show a toast or alert
+      }
+    } catch (err) {
+      // Handle error (toast, etc)
     }
   };
 
-  if (!event) {
+  if (notFound) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-900 text-white">
         <div>
           <h2 className="text-2xl font-semibold">Event not found</h2>
-          <Link to="/events" className="text-blue-400 underline mt-4 inline-block">Back to Events</Link>
+          <Link
+            to="/events"
+            className="text-blue-400 underline mt-4 inline-block"
+          >
+            Back to Events
+          </Link>
         </div>
+      </div>
+    );
+  }
+
+  if (!event || loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-900 text-white">
+        <span>Loading event…</span>
       </div>
     );
   }
@@ -53,20 +106,31 @@ export default function EventDetails() {
             {event.category ? event.category.charAt(0) : "E"}
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-white mb-1">{event.eventName}</h1>
+            <h1 className="text-3xl font-bold text-white mb-1">
+              {event.eventName}
+            </h1>
             <div className="text-slate-400 text-md mb-1">
-              {new Date(event.eventDate).toLocaleString()} &middot; {event.venue}
+              {new Date(event.eventDate).toLocaleString()} &middot;{" "}
+              {event.venue}
             </div>
             <div className="flex flex-wrap gap-2 mt-1">
-              {event.tags && event.tags.map(tag => (
-                <span key={tag} className="px-3 py-1 text-xs bg-cyan-600/20 text-cyan-300 rounded-full">{tag}</span>
-              ))}
+              {event.tags &&
+                event.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="px-3 py-1 text-xs bg-cyan-600/20 text-cyan-300 rounded-full"
+                  >
+                    {tag}
+                  </span>
+                ))}
             </div>
           </div>
         </div>
         <p className="text-slate-200 mb-5 text-lg">{event.description}</p>
         <div className="flex items-center gap-4 mb-5">
-          <span className="text-slate-300">{event.maxParticipants} participants expected</span>
+          <span className="text-slate-300">
+            {event.maxParticipants} participants expected
+          </span>
         </div>
         {registered ? (
           <span className="px-6 py-2 rounded bg-green-500/20 text-green-400 font-semibold">

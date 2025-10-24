@@ -251,7 +251,7 @@ export default function Login() {
 
           <div className="mt-6">
             <a
-              href="/signup"
+              href="/register"
               className="w-full flex items-center justify-center py-3 px-4 border-2 border-gray-200 text-gray-700 font-semibold rounded-lg hover:border-blue-600 hover:text-blue-600 transition"
             >
               Create an account
@@ -268,7 +268,7 @@ export default function Login() {
           </a>
         </div>
 
-        <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+        {/* <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
           <p className="text-sm text-blue-800 font-medium mb-2">
             🔧 Development Info
           </p>
@@ -282,7 +282,7 @@ export default function Login() {
             localStorage usage is commented out for Claude.ai. Uncomment in
             production code.
           </p>
-        </div>
+        </div> */}
       </div>
     </div>
   );

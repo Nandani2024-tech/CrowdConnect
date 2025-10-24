@@ -1,9 +1,30 @@
 // components/dashboard/UpcomingEvents.jsx
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Calendar, Clock, MapPin, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const UpcomingEvents = ({ events }) => {
+  const [registrationStatus, setRegistrationStatus] = useState({});
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const fetchStatuses = async () => {
+      const statuses = {};
+      for (const event of events) {
+        const res = await fetch(
+          `http://localhost:5000/api/attendee/events/${event._id}/registered`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const data = await res.json();
+        statuses[event._id] = data.registered;
+      }
+      setRegistrationStatus(statuses);
+    };
+    if (events.length) fetchStatuses();
+  }, [events]);
+
   return (
     <div className="bg-slate-800 rounded-lg p-6 shadow-lg">
       <div className="flex items-center justify-between mb-4">
@@ -52,9 +73,12 @@ const UpcomingEvents = ({ events }) => {
                   <span className="bg-cyan-500/20 text-cyan-300 text-xs px-3 py-1 rounded-full">
                     ⏰ {event.daysLeft} days left
                   </span>
-                  <span className="bg-green-500/20 text-green-300 text-xs px-3 py-1 rounded-full">
-                    ✓ Registered
-                  </span>
+                  {registrationStatus[event._id] && (
+                    <span className="bg-green-500/20 text-green-300 text-xs px-3 py-1 rounded-full">
+                      ✓ Registered
+                    </span>
+                  )}
+
                   <span className="bg-purple-500/20 text-purple-300 text-xs px-3 py-1 rounded-full">
                     {event.category}
                   </span>

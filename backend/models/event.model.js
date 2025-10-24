@@ -16,6 +16,10 @@ const eventSchema = new mongoose.Schema({
   tags: [String],
   posterImage: { type: String },
   organiser: { type: mongoose.Schema.Types.ObjectId, ref: 'Organiser', required: true },
+  registrations: [
+  { type: mongoose.Schema.Types.ObjectId, ref: 'Attendee' }  // or 'User' if you use single user collection
+],
+
 }, { timestamps: true });
 
 export default mongoose.model('Event', eventSchema);

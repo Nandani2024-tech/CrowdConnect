@@ -51,10 +51,10 @@ const EventsManaged = ({ events }) => {
           >
             <div className="flex items-start justify-between mb-3">
               <div className="flex-1">
-                <h3 className="text-white font-semibold text-lg mb-1">{event.title}</h3>
+                <h3 className="text-white font-semibold text-lg mb-1">{event.eventName}</h3>
                 <div className="flex items-center gap-2 text-sm text-slate-400">
                   <Calendar className="w-4 h-4" />
-                  <span>{event.date}</span>
+                  <span>{new Date(event.eventDate).toLocaleDateString()}</span>
                 </div>
               </div>
               <span className={`text-xs px-3 py-1 rounded-full border ${getStatusColor(event.status)}`}>
@@ -65,7 +65,7 @@ const EventsManaged = ({ events }) => {
             <div className="flex items-center justify-between pt-3 border-t border-slate-600">
               <div className="flex items-center gap-2 text-slate-300">
                 <Users className="w-4 h-4" />
-                <span className="text-sm font-medium">{event.registrations} Registered</span>
+                <span>{event.registrations?.length || 0} Registered</span>
               </div>
 
               <div className="flex gap-2">

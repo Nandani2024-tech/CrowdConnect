@@ -1,4 +1,6 @@
 import Event from '../models/event.model.js';
+import mongoose from 'mongoose';
+
 
 export const createEvent = async (req, res) => {
   try {
@@ -61,6 +63,10 @@ export const getAllEvents = async (req, res) => {
 // Returns detail for single event by id
 export const getEventById = async (req, res) => {
   try {
+    // Prevent server error by checking ID validity first!
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ success: false, message: "Invalid event ID" });
+    }
     const event = await Event.findById(req.params.id);
     if (!event) {
       return res.status(404).json({ success: false, message: "Event not found" });

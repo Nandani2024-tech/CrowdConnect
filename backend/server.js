@@ -4,7 +4,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from './routes/auth.routes.js';
 import attendeeRoutes from './routes/attendee.routes.js';
-
+import organiserRoutes from './routes/organiser.routes.js';
 
 
 // Load environment variables
@@ -37,7 +37,8 @@ connectDB();
 
 // Routes
 app.use('/api/auth', authRoutes);
-app.use('/api/auth', authRoutes);
+// app.use('/api/auth', authRoutes);
+app.use('/api/organiser', organiserRoutes);
 app.use('/api/attendee', attendeeRoutes);
 
 // Health check route

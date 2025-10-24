@@ -7,6 +7,9 @@ import attendeeRoutes from './routes/attendee.routes.js';
 import organiserRoutes from './routes/organiser.routes.js';
 import speakerRoutes from './routes/speaker.routes.js';
 import eventRoutes from "./routes/event.routes.js";
+import path from 'path';
+import { fileURLToPath } from 'url';
+
 
 
 
@@ -16,6 +19,8 @@ dotenv.config();
 
 // Initialize express app
 const app = express();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Middleware
 app.use(express.json());
@@ -73,6 +78,17 @@ app.get('/', (req, res) => {
     }
   });
 });
+
+
+// Bind dist as static for production
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, '../frontend/vite-project/dist')));
+  app.get('*', (req, res) => {
+    if (!req.path.startsWith('/api')) {
+      res.sendFile(path.join(__dirname, '../frontend/vite-project/dist/index.html'));
+    }
+  });
+}
 
 // 404 handler
 app.use((req, res) => {

@@ -1,27 +1,36 @@
 // components/organiser/CreateEventForm.jsx
-import React, { useState } from 'react';
-import { 
-  Calendar, Clock, MapPin, Users, Tag, Upload, 
-  Image as ImageIcon, AlertCircle, CheckCircle, Sparkles, X,
-  ArrowLeft
-} from 'lucide-react';
+import React, { useState } from "react";
+import {
+  Calendar,
+  Clock,
+  MapPin,
+  Users,
+  Tag,
+  Upload,
+  Image as ImageIcon,
+  AlertCircle,
+  CheckCircle,
+  Sparkles,
+  X,
+  ArrowLeft,
+} from "lucide-react";
 
 const CreateEventForm = ({ onSubmit, onCancel }) => {
   const [formData, setFormData] = useState({
-    eventName: '',
-    description: '',
-    eventDate: '',
-    startTime: '',
-    endTime: '',
-    venue: '',
-    category: '',
-    maxParticipants: '',
-    registrationDeadline: '',
-    eventType: 'in-person',
-    ticketPrice: '',
-    speakerNames: '',
-    tags: '',
-    posterImage: null
+    eventName: "",
+    description: "",
+    eventDate: "",
+    startTime: "",
+    endTime: "",
+    venue: "",
+    category: "",
+    maxParticipants: "",
+    registrationDeadline: "",
+    eventType: "in-person",
+    ticketPrice: "",
+    speakerNames: "",
+    tags: "",
+    posterImage: null,
   });
 
   const [errors, setErrors] = useState({});
@@ -29,17 +38,30 @@ const CreateEventForm = ({ onSubmit, onCancel }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const categories = [
-    'Technology', 'AI & Machine Learning', 'Blockchain', 'Cloud Computing',
-    'Cybersecurity', 'DevOps', 'Data Science', 'Web Development',
-    'Mobile Development', 'Entrepreneurship', 'Marketing', 'Design',
-    'Networking', 'Workshop', 'Conference', 'Seminar', 'Other'
+    "Technology",
+    "AI & Machine Learning",
+    "Blockchain",
+    "Cloud Computing",
+    "Cybersecurity",
+    "DevOps",
+    "Data Science",
+    "Web Development",
+    "Mobile Development",
+    "Entrepreneurship",
+    "Marketing",
+    "Design",
+    "Networking",
+    "Workshop",
+    "Conference",
+    "Seminar",
+    "Other",
   ];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
     if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
+      setErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
 
@@ -47,26 +69,29 @@ const CreateEventForm = ({ onSubmit, onCancel }) => {
     const file = e.target.files[0];
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
-        setErrors(prev => ({ ...prev, posterImage: 'Image size must be less than 5MB' }));
+        setErrors((prev) => ({
+          ...prev,
+          posterImage: "Image size must be less than 5MB",
+        }));
         return;
       }
-      
-      setFormData(prev => ({ ...prev, posterImage: file }));
-      
+
+      setFormData((prev) => ({ ...prev, posterImage: file }));
+
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result);
       };
       reader.readAsDataURL(file);
-      
+
       if (errors.posterImage) {
-        setErrors(prev => ({ ...prev, posterImage: '' }));
+        setErrors((prev) => ({ ...prev, posterImage: "" }));
       }
     }
   };
 
   const removeImage = () => {
-    setFormData(prev => ({ ...prev, posterImage: null }));
+    setFormData((prev) => ({ ...prev, posterImage: null }));
     setImagePreview(null);
   };
 
@@ -74,59 +99,59 @@ const CreateEventForm = ({ onSubmit, onCancel }) => {
     const newErrors = {};
 
     if (!formData.eventName.trim()) {
-      newErrors.eventName = 'Event name is required';
+      newErrors.eventName = "Event name is required";
     } else if (formData.eventName.length < 5) {
-      newErrors.eventName = 'Event name must be at least 5 characters';
+      newErrors.eventName = "Event name must be at least 5 characters";
     }
 
     if (!formData.description.trim()) {
-      newErrors.description = 'Description is required';
+      newErrors.description = "Description is required";
     } else if (formData.description.length < 20) {
-      newErrors.description = 'Description must be at least 20 characters';
+      newErrors.description = "Description must be at least 20 characters";
     }
 
     if (!formData.eventDate) {
-      newErrors.eventDate = 'Event date is required';
+      newErrors.eventDate = "Event date is required";
     } else {
       const selectedDate = new Date(formData.eventDate);
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       if (selectedDate < today) {
-        newErrors.eventDate = 'Event date cannot be in the past';
+        newErrors.eventDate = "Event date cannot be in the past";
       }
     }
 
     if (!formData.startTime) {
-      newErrors.startTime = 'Start time is required';
+      newErrors.startTime = "Start time is required";
     }
 
     if (!formData.endTime) {
-      newErrors.endTime = 'End time is required';
+      newErrors.endTime = "End time is required";
     } else if (formData.startTime && formData.endTime <= formData.startTime) {
-      newErrors.endTime = 'End time must be after start time';
+      newErrors.endTime = "End time must be after start time";
     }
 
     if (!formData.venue.trim()) {
-      newErrors.venue = 'Venue/Location is required';
+      newErrors.venue = "Venue/Location is required";
     }
 
     if (!formData.category) {
-      newErrors.category = 'Category is required';
+      newErrors.category = "Category is required";
     }
 
     if (!formData.maxParticipants) {
-      newErrors.maxParticipants = 'Max participants is required';
+      newErrors.maxParticipants = "Max participants is required";
     } else if (formData.maxParticipants < 1) {
-      newErrors.maxParticipants = 'Must be at least 1 participant';
+      newErrors.maxParticipants = "Must be at least 1 participant";
     }
 
     if (!formData.registrationDeadline) {
-      newErrors.registrationDeadline = 'Registration deadline is required';
+      newErrors.registrationDeadline = "Registration deadline is required";
     } else {
       const deadline = new Date(formData.registrationDeadline);
       const eventDate = new Date(formData.eventDate);
       if (deadline >= eventDate) {
-        newErrors.registrationDeadline = 'Deadline must be before event date';
+        newErrors.registrationDeadline = "Deadline must be before event date";
       }
     }
 
@@ -136,21 +161,59 @@ const CreateEventForm = ({ onSubmit, onCancel }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!validate()) {
-      return;
-    }
-
+    if (!validate()) return;
     setIsSubmitting(true);
-    
-    setTimeout(() => {
-      console.log('Form submitted:', formData);
-      if (onSubmit) {
-        onSubmit(formData);
+
+    try {
+      const token = localStorage.getItem("token");
+      const payload = {
+        ...formData,
+        maxParticipants: Number(formData.maxParticipants),
+        ticketPrice: Number(formData.ticketPrice),
+      };
+      delete payload.posterImage; // If not using
+
+      const res = await fetch("http://localhost:5000/api/events", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const result = await res.json();
+      if (!res.ok) {
+        setErrors({
+          ...errors,
+          api: result.message || "Event creation failed",
+        });
+      } else {
+        setFormData({
+          eventName: "",
+          description: "",
+          eventDate: "",
+          startTime: "",
+          endTime: "",
+          venue: "",
+          category: "",
+          maxParticipants: "",
+          registrationDeadline: "",
+          eventType: "in-person",
+          ticketPrice: "",
+          speakerNames: "",
+          tags: "",
+          posterImage: null,
+        });
+        setImagePreview(null); // Clear image preview too
+
+        if (onSubmit) onSubmit(result.data);
+        alert("Event created successfully! 🎉");
       }
-      setIsSubmitting(false);
-      alert('Event created successfully! 🎉');
-    }, 1500);
+    } catch (error) {
+      setErrors({ ...errors, api: error.message });
+    }
+    setIsSubmitting(false);
   };
 
   return (
@@ -164,10 +227,13 @@ const CreateEventForm = ({ onSubmit, onCancel }) => {
                 <Sparkles className="w-8 h-8" />
                 Create New Event
               </h1>
-              <p className="text-blue-100 mt-2">Fill in the details to create an amazing event for your attendees</p>
+              <p className="text-blue-100 mt-2">
+                Fill in the details to create an amazing event for your
+                attendees
+              </p>
             </div>
             {onCancel && (
-              <button 
+              <button
                 onClick={onCancel}
                 className="text-white hover:bg-white/20 px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
               >
@@ -181,7 +247,6 @@ const CreateEventForm = ({ onSubmit, onCancel }) => {
         {/* Form Card */}
         <div className="bg-slate-800 rounded-xl shadow-2xl border border-slate-700">
           <form onSubmit={handleSubmit} className="p-8 space-y-6">
-            
             {/* Event Name */}
             <div>
               <label className="block text-white font-medium mb-2 text-lg">
@@ -194,7 +259,7 @@ const CreateEventForm = ({ onSubmit, onCancel }) => {
                 onChange={handleChange}
                 placeholder="e.g., AI & Machine Learning Summit 2025"
                 className={`w-full bg-slate-700 text-white rounded-lg px-4 py-3 border ${
-                  errors.eventName ? 'border-red-500' : 'border-slate-600'
+                  errors.eventName ? "border-red-500" : "border-slate-600"
                 } focus:border-cyan-500 focus:outline-none transition-colors text-lg`}
               />
               {errors.eventName && (
@@ -217,7 +282,7 @@ const CreateEventForm = ({ onSubmit, onCancel }) => {
                 placeholder="Describe your event, what attendees will learn, and why they should join..."
                 rows="5"
                 className={`w-full bg-slate-700 text-white rounded-lg px-4 py-3 border ${
-                  errors.description ? 'border-red-500' : 'border-slate-600'
+                  errors.description ? "border-red-500" : "border-slate-600"
                 } focus:border-cyan-500 focus:outline-none transition-colors resize-none`}
               />
               <div className="flex items-center justify-between mt-1">
@@ -246,7 +311,7 @@ const CreateEventForm = ({ onSubmit, onCancel }) => {
                   value={formData.eventDate}
                   onChange={handleChange}
                   className={`w-full bg-slate-700 text-white rounded-lg px-4 py-3 border ${
-                    errors.eventDate ? 'border-red-500' : 'border-slate-600'
+                    errors.eventDate ? "border-red-500" : "border-slate-600"
                   } focus:border-cyan-500 focus:outline-none transition-colors`}
                 />
                 {errors.eventDate && (
@@ -268,7 +333,7 @@ const CreateEventForm = ({ onSubmit, onCancel }) => {
                   value={formData.startTime}
                   onChange={handleChange}
                   className={`w-full bg-slate-700 text-white rounded-lg px-4 py-3 border ${
-                    errors.startTime ? 'border-red-500' : 'border-slate-600'
+                    errors.startTime ? "border-red-500" : "border-slate-600"
                   } focus:border-cyan-500 focus:outline-none transition-colors`}
                 />
                 {errors.startTime && (
@@ -290,7 +355,7 @@ const CreateEventForm = ({ onSubmit, onCancel }) => {
                   value={formData.endTime}
                   onChange={handleChange}
                   className={`w-full bg-slate-700 text-white rounded-lg px-4 py-3 border ${
-                    errors.endTime ? 'border-red-500' : 'border-slate-600'
+                    errors.endTime ? "border-red-500" : "border-slate-600"
                   } focus:border-cyan-500 focus:outline-none transition-colors`}
                 />
                 {errors.endTime && (
@@ -316,7 +381,7 @@ const CreateEventForm = ({ onSubmit, onCancel }) => {
                   onChange={handleChange}
                   placeholder="e.g., Tech Hub, Bengaluru or Virtual Event"
                   className={`w-full bg-slate-700 text-white rounded-lg px-4 py-3 border ${
-                    errors.venue ? 'border-red-500' : 'border-slate-600'
+                    errors.venue ? "border-red-500" : "border-slate-600"
                   } focus:border-cyan-500 focus:outline-none transition-colors`}
                 />
                 {errors.venue && (
@@ -356,12 +421,14 @@ const CreateEventForm = ({ onSubmit, onCancel }) => {
                   value={formData.category}
                   onChange={handleChange}
                   className={`w-full bg-slate-700 text-white rounded-lg px-4 py-3 border ${
-                    errors.category ? 'border-red-500' : 'border-slate-600'
+                    errors.category ? "border-red-500" : "border-slate-600"
                   } focus:border-cyan-500 focus:outline-none transition-colors`}
                 >
                   <option value="">Select a category</option>
-                  {categories.map(cat => (
-                    <option key={cat} value={cat}>{cat}</option>
+                  {categories.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat}
+                    </option>
                   ))}
                 </select>
                 {errors.category && (
@@ -385,7 +452,9 @@ const CreateEventForm = ({ onSubmit, onCancel }) => {
                   placeholder="e.g., 100"
                   min="1"
                   className={`w-full bg-slate-700 text-white rounded-lg px-4 py-3 border ${
-                    errors.maxParticipants ? 'border-red-500' : 'border-slate-600'
+                    errors.maxParticipants
+                      ? "border-red-500"
+                      : "border-slate-600"
                   } focus:border-cyan-500 focus:outline-none transition-colors`}
                 />
                 {errors.maxParticipants && (
@@ -409,7 +478,9 @@ const CreateEventForm = ({ onSubmit, onCancel }) => {
                   value={formData.registrationDeadline}
                   onChange={handleChange}
                   className={`w-full bg-slate-700 text-white rounded-lg px-4 py-3 border ${
-                    errors.registrationDeadline ? 'border-red-500' : 'border-slate-600'
+                    errors.registrationDeadline
+                      ? "border-red-500"
+                      : "border-slate-600"
                   } focus:border-cyan-500 focus:outline-none transition-colors`}
                 />
                 {errors.registrationDeadline && (
@@ -433,7 +504,9 @@ const CreateEventForm = ({ onSubmit, onCancel }) => {
                   min="0"
                   className="w-full bg-slate-700 text-white rounded-lg px-4 py-3 border border-slate-600 focus:border-cyan-500 focus:outline-none transition-colors"
                 />
-                <p className="text-slate-400 text-xs mt-1">💡 Leave as 0 for free events</p>
+                <p className="text-slate-400 text-xs mt-1">
+                  💡 Leave as 0 for free events
+                </p>
               </div>
             </div>
 
@@ -465,7 +538,9 @@ const CreateEventForm = ({ onSubmit, onCancel }) => {
                 placeholder="e.g., AI, Innovation, Networking (comma separated)"
                 className="w-full bg-slate-700 text-white rounded-lg px-4 py-3 border border-slate-600 focus:border-cyan-500 focus:outline-none transition-colors"
               />
-              <p className="text-slate-400 text-xs mt-1">🏷️ Add relevant tags to help attendees discover your event</p>
+              <p className="text-slate-400 text-xs mt-1">
+                🏷️ Add relevant tags to help attendees discover your event
+              </p>
             </div>
 
             {/* Image Upload */}
@@ -474,7 +549,7 @@ const CreateEventForm = ({ onSubmit, onCancel }) => {
                 <ImageIcon className="w-4 h-4 inline mr-1" />
                 Event Poster/Image (Optional)
               </label>
-              
+
               {!imagePreview ? (
                 <div className="border-2 border-dashed border-slate-600 rounded-lg p-12 text-center hover:border-cyan-500 transition-colors bg-slate-700/30">
                   <input
@@ -484,20 +559,22 @@ const CreateEventForm = ({ onSubmit, onCancel }) => {
                     className="hidden"
                     id="posterUpload"
                   />
-                  <label 
-                    htmlFor="posterUpload" 
+                  <label
+                    htmlFor="posterUpload"
                     className="cursor-pointer flex flex-col items-center"
                   >
                     <Upload className="w-16 h-16 text-slate-400 mb-4" />
-                    <p className="text-white mb-1 text-lg">Click to upload event poster</p>
+                    <p className="text-white mb-1 text-lg">
+                      Click to upload event poster
+                    </p>
                     <p className="text-slate-400 text-sm">PNG, JPG up to 5MB</p>
                   </label>
                 </div>
               ) : (
                 <div className="relative rounded-lg overflow-hidden border-2 border-cyan-500">
-                  <img 
-                    src={imagePreview} 
-                    alt="Event poster preview" 
+                  <img
+                    src={imagePreview}
+                    alt="Event poster preview"
                     className="w-full h-80 object-cover"
                   />
                   <button
@@ -512,7 +589,7 @@ const CreateEventForm = ({ onSubmit, onCancel }) => {
                   </div>
                 </div>
               )}
-              
+
               {errors.posterImage && (
                 <p className="text-red-400 text-sm mt-2 flex items-center gap-1">
                   <AlertCircle className="w-4 h-4" />

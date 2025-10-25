@@ -4,7 +4,9 @@ import { Calendar, Users, TrendingUp } from 'lucide-react';
 
 const WelcomeBanner = ({ user }) => {
   // Default values as fallback
-  const firstName = user?.username || (user?.name ? user.name.split(' ')[0] : "User");
+  // console.log("👤 User data received:", user);
+  // const firstName = user?.username || (user?.name ? user.name.split(' ')[0] : "User");
+  const firstName = user?.userId?.username || "User";
   const avatar = user?.avatar || "👤";
   const eventsRegistered = user?.stats?.eventsRegistered ?? 0;
   const connections = user?.stats?.connections ?? 0;

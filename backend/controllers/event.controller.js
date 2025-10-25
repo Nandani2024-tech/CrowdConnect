@@ -1,6 +1,6 @@
 import Event from '../models/event.model.js';
 import mongoose from 'mongoose';
-
+import Organiser from '../models/organiser.model.js';
 
 export const createEvent = async (req, res) => {
   try {
@@ -17,15 +17,37 @@ export const createEvent = async (req, res) => {
       eventType,
       ticketPrice,
       speakerNames,
-      tags,
-      posterImage
+      tags
     } = req.body;
-    // Server-side validation (sample)
-    if (!eventName || eventName.length < 5) return res.status(400).json({ success: false, message: "Event name too short" });
-    if (!description || description.length < 20) return res.status(400).json({ success: false, message: "Description too short" });
-    // ...repeat for other fields...
 
-    // Create new event
+    // Validation
+    if (!eventName || eventName.length < 5) {
+      return res.status(400).json({ 
+        success: false, 
+        message: "Event name must be at least 5 characters" 
+      });
+    }
+    if (!description || description.length < 20) {
+      return res.status(400).json({ 
+        success: false, 
+        message: "Description must be at least 20 characters" 
+      });
+    }
+
+    // ✅ FIX: Get organiser ID from logged-in user
+    const organiser = await Organiser.findOne({ userId: req.user._id });
+    
+    if (!organiser) {
+      return res.status(404).json({ 
+        success: false, 
+        message: "Organiser profile not found. Please complete your organiser profile first." 
+      });
+    }
+
+    
+    // console.log("✅ Creating event for organiser:", organiser._id); // Debug log
+
+    // Create event with correct organiser ID
     const event = await Event.create({
       eventName,
       description,
@@ -37,34 +59,57 @@ export const createEvent = async (req, res) => {
       maxParticipants,
       registrationDeadline,
       eventType,
-      ticketPrice,
+      ticketPrice: ticketPrice || 0,
       speakerNames: speakerNames ? speakerNames.split(",").map(s => s.trim()) : [],
-      tags: tags ? tags.split(",").map(s => s.trim()) : [],
-      posterImage,
-      organiser: req.user.id // Assuming auth middleware attaches organiser to req.user
+      tags: tags ? tags.split(",").map(t => t.trim()) : [],
+      organiser: organiser._id, // ← Use organiser document ID
+      registrations: []
     });
 
-    res.status(201).json({ success: true, data: event });
+    // console.log("✅ Event created with ID:", event._id);
+
+    res.status(201).json({ 
+      success: true, 
+      data: event 
+    });
+
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    console.error("❌ Error creating event:", error);
+    res.status(500).json({ 
+      success: false, 
+      message: error.message 
+    });
   }
-}
+};
+
 
 
 export const getAllEvents = async (req, res) => {
   try {
-    const { organiserId } = req.query; // Get organiserId from query params
-    
-    // Build filter object
+    const { organiserId } = req.query;
+
+    //console.log("🔍 Fetching events with organiserId:", organiserId); // Debug
+
     const filter = {};
     if (organiserId) {
-      filter.organiser = organiserId; // Only events by this organiser
+      filter.organiser = organiserId;
     }
-    
-    const events = await Event.find(filter); // Use filter
-    res.json({ success: true, data: events });
+
+    const events = await Event.find(filter);
+
+    //console.log("📦 Found", events.length, "events"); // Debug
+
+    res.json({ 
+      success: true, 
+      data: events 
+    });
+
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    console.error("❌ Error fetching events:", error);
+    res.status(500).json({ 
+      success: false, 
+      message: error.message 
+    });
   }
 };
 

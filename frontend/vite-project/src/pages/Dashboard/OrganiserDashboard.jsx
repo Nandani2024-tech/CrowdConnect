@@ -16,27 +16,33 @@ export default function OrganiserDashboard() {
   const [showCreateEvent, setShowCreateEvent] = useState(false);
 
   useEffect(() => {
-  const fetchData = async () => {
-    const token = localStorage.getItem("token");
-    // Fetch organiser profile
-    const profileRes = await fetch("http://localhost:5000/api/organiser/me", {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const profileJson = await profileRes.json();
-    let organiser = profileJson.data;
+    const fetchData = async () => {
+      const token = localStorage.getItem("token");
+      // Fetch organiser profile
+      const profileRes = await fetch("http://localhost:5000/api/organiser/me", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const profileJson = await profileRes.json();
+      let organiser = profileJson.data;
+      console.log("🔍 Fetching events for organiser ID:", organiser._id);
 
-    // Fetch events managed by this organiser -- make sure your backend supports this!
-    const eventsRes = await fetch("http://localhost:5000/api/events?organiserId=" + organiser._id, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const eventsJson = await eventsRes.json();
-    organiser.eventsOrganized = eventsJson.data;
+      // Fetch events managed by this organiser -- make sure your backend supports this!
+      const eventsRes = await fetch(
+        "http://localhost:5000/api/events?organiserId=" + organiser._id,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      const eventsJson = await eventsRes.json();
 
-    setOrganiser(organiser);
-  };
-  fetchData();
-}, []);
+       console.log("📦 Events returned:", eventsJson.data);
+       
+      organiser.eventsOrganized = eventsJson.data;
 
+      setOrganiser(organiser);
+    };
+    fetchData();
+  }, []);
 
   const handleEventCreated = (newEvent) => {
     setOrganiser((prev) => ({
@@ -82,7 +88,12 @@ export default function OrganiserDashboard() {
               registrations={organiser.registrations || []}
             />
             <OrganiserAnalytics analytics={organiser.analytics || {}} />
-            <SpeakerTeamManagement team={organiser.team || []} />
+            <SpeakerTeamManagement
+              team={organiser.team || []}
+              events={organiser.eventsOrganized || []} // ← Make sure this is here
+              pendingInvitations={organiser.pendingInvitations || []}
+            />
+
             <EventReports reports={organiser.reports || []} />
           </div>
 

@@ -18,16 +18,16 @@ export default function AllEvents() {
   }, []);
 
   // Guard register per-user if you want (for now it's global per browser)
-  const handleRegister = (eventId) => {
-    const userRegs = JSON.parse(localStorage.getItem("registeredEvents") || "[]");
-    if (!userRegs.includes(eventId)) {
-      const updated = [...userRegs, eventId];
-      localStorage.setItem("registeredEvents", JSON.stringify(updated));
-    }
-    setEvents(
-      events.map(ev => ev._id === eventId ? { ...ev, registered: true } : ev)
-    );
-  };
+  // const handleRegister = (eventId) => {
+  //   const userRegs = JSON.parse(localStorage.getItem("registeredEvents") || "[]");
+  //   if (!userRegs.includes(eventId)) {
+  //     const updated = [...userRegs, eventId];
+  //     localStorage.setItem("registeredEvents", JSON.stringify(updated));
+  //   }
+  //   setEvents(
+  //     events.map(ev => ev._id === eventId ? { ...ev, registered: true } : ev)
+  //   );
+  // };
 
   // Only render/allow events that have a valid _id
   return (
@@ -68,7 +68,7 @@ export default function AllEvents() {
                       </button>
                     </Link>
                   ) : null}
-                  {event.registered ? (
+                  {/* {event.registered ? (
                     <span className="text-green-400 mt-2">Registered</span>
                   ) : (
                     <button
@@ -77,7 +77,7 @@ export default function AllEvents() {
                     >
                       Register
                     </button>
-                  )}
+                  )} */}
                 </div>
               </div>
             ))}

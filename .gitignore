@@ -1,2 +1,8 @@
 Notes.txt
 Notes2.txt
+
+node_modules/
+.env
+dist/
+build/
+.vercel

@@ -7,20 +7,12 @@ import attendeeRoutes from './routes/attendee.routes.js';
 import organiserRoutes from './routes/organiser.routes.js';
 import speakerRoutes from './routes/speaker.routes.js';
 import eventRoutes from "./routes/event.routes.js";
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-
-
-
 
 // Load environment variables
 dotenv.config();
 
 // Initialize express app
 const app = express();
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 // Middleware
 app.use(express.json());
@@ -46,12 +38,10 @@ connectDB();
 
 // Routes
 app.use('/api/auth', authRoutes);
-// app.use('/api/auth', authRoutes);
 app.use('/api/organiser', organiserRoutes);
 app.use('/api/attendee', attendeeRoutes);
 app.use('/api/speaker', speakerRoutes);
 app.use('/api/events', eventRoutes);
-
 
 // Health check route
 app.get('/api/health', (req, res) => {
@@ -79,22 +69,11 @@ app.get('/', (req, res) => {
   });
 });
 
-
-// Bind dist as static for production
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, '../frontend/vite-project/dist')));
-  app.get('*', (req, res) => {
-    if (!req.path.startsWith('/api')) {
-      res.sendFile(path.join(__dirname, '../frontend/vite-project/dist/index.html'));
-    }
-  });
-}
-
-// 404 handler
+// 404 handler for API routes
 app.use((req, res) => {
   res.status(404).json({
     success: false,
-    message: 'Route not found'
+    message: `Route ${req.method} ${req.url} not found`
   });
 });
 
@@ -115,6 +94,5 @@ app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
 });
-
 
 export default app;

@@ -53,12 +53,21 @@ export const createEvent = async (req, res) => {
 
 export const getAllEvents = async (req, res) => {
   try {
-    const events = await Event.find({});
+    const { organiserId } = req.query; // Get organiserId from query params
+    
+    // Build filter object
+    const filter = {};
+    if (organiserId) {
+      filter.organiser = organiserId; // Only events by this organiser
+    }
+    
+    const events = await Event.find(filter); // Use filter
     res.json({ success: true, data: events });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
 
 // Returns detail for single event by id
 export const getEventById = async (req, res) => {

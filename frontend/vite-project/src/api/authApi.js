@@ -1,8 +1,10 @@
-const API_BASE_URL = "http://localhost:5000/api/auth";
+const API_BASE_URL = import.meta.env.VITE_API_URL; // ✅ Changed this line
+
+export default API_BASE_URL;
 
 // ✅ Register a new user
 export const registerUser = async (formData) => {
-  const response = await fetch(`${API_BASE_URL}/register`, {
+  const response = await fetch(`${API_BASE_URL}/auth/register`, { // ✅ Added /auth
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -14,7 +16,7 @@ export const registerUser = async (formData) => {
 
 // ✅ Login
 export const loginUser = async (credentials) => {
-  const response = await fetch(`${API_BASE_URL}/login`, {
+  const response = await fetch(`${API_BASE_URL}/auth/login`, { // ✅ Added /auth
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -26,7 +28,7 @@ export const loginUser = async (credentials) => {
 
 // ✅ Get current user profile (requires token)
 export const getCurrentUser = async (token) => {
-  const response = await fetch(`${API_BASE_URL}/me`, {
+  const response = await fetch(`${API_BASE_URL}/auth/me`, { // ✅ Added /auth
     headers: {
       Authorization: `Bearer ${token}`,
     },

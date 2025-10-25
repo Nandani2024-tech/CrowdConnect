@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { X, Mail, UserPlus, Calendar, MessageSquare } from "lucide-react";
+import API_BASE_URL from '../../../api/authApi';
 
 const InviteMemberForm = ({ isOpen, onClose, events = [] }) => {
   const [formData, setFormData] = useState({
@@ -39,7 +40,7 @@ const InviteMemberForm = ({ isOpen, onClose, events = [] }) => {
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
-        "http://localhost:5000/api/organiser/invite-member",
+        `${API_BASE_URL}/organiser/invite-member`,
         {
           method: "POST",
           headers: {

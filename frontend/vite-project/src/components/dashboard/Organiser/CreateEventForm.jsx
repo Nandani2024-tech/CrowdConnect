@@ -1,4 +1,6 @@
 // components/organiser/CreateEventForm.jsx
+import API_BASE_URL from '../../../api/authApi';
+
 import React, { useState } from "react";
 import {
   Calendar,
@@ -156,7 +158,7 @@ const CreateEventForm = ({ onEventCreated, onCancel }) => {
         ticketPrice: Number(formData.ticketPrice),
       };
       delete payload.posterImage;
-      const res = await fetch("http://localhost:5000/api/events", {
+      const res = await fetch(`${API_BASE_URL}/events`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

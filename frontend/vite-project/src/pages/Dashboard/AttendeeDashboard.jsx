@@ -8,6 +8,7 @@ import UpcomingEvents from "../../components/dashboard/UpcomingEvents";
 import EventRecommendations from "../../components/dashboard/EventRecommendations";
 import PastEvents from "../../components/dashboard/PastEvents";
 import MySchedule from "../../components/dashboard/MySchedule";
+import API_BASE_URL from '../../api/authApi';
 
 export default function AttendeeDashboard() {
   const [attendee, setAttendee] = useState(null);
@@ -22,7 +23,7 @@ export default function AttendeeDashboard() {
     // Fetch attendee profile
     async function fetchAttendee() {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:5000/api/attendee/me", {
+      const res = await fetch(`${API_BASE_URL}/attendee/me`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const json = await res.json();
@@ -44,7 +45,7 @@ export default function AttendeeDashboard() {
 
     // Fetch events (example endpoint—replace with your actual events endpoint)
     async function fetchEvents() {
-      const res = await fetch("http://localhost:5000/api/events");
+      const res = await fetch(`${API_BASE_URL}/events`);
       const json = await res.json();
       if (json.success)
         setEventData({

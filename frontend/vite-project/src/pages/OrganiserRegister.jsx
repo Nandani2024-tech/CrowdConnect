@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { User, Mail, Lock, Building2, Phone, Globe } from "lucide-react";
+import API_BASE_URL from "../api/authApi";
 
 export default function OrganiserRegister() {
   const [formData, setFormData] = useState({
@@ -58,7 +59,7 @@ export default function OrganiserRegister() {
     };
 
     try {
-      const response = await fetch("http://localhost:5000/api/auth/register", {
+      const response = await fetch(`${API_BASE_URL}/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(registrationData),

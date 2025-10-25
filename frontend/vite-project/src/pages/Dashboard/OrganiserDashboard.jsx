@@ -10,6 +10,9 @@ import EventReports from "../../components/dashboard/Organiser/EventReports";
 import OrganiserNotifications from "../../components/dashboard/Organiser/OrganiserNotifications";
 import OrganiserProfileOverview from "../../components/dashboard/Organiser/OrganiserProfileOverview";
 import CreateEventForm from "../../components/dashboard/Organiser/CreateEventForm";
+import API_BASE_URL from '../../api/authApi';
+
+
 
 export default function OrganiserDashboard() {
   const [organiser, setOrganiser] = useState(null);
@@ -19,7 +22,7 @@ export default function OrganiserDashboard() {
     const fetchData = async () => {
       const token = localStorage.getItem("token");
       // Fetch organiser profile
-      const profileRes = await fetch("http://localhost:5000/api/organiser/me", {
+      const profileRes = await fetch(`${API_BASE_URL}/organiser/me`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const profileJson = await profileRes.json();
@@ -28,7 +31,7 @@ export default function OrganiserDashboard() {
 
       // Fetch events managed by this organiser -- make sure your backend supports this!
       const eventsRes = await fetch(
-        "http://localhost:5000/api/events?organiserId=" + organiser._id,
+        `${API_BASE_URL}/events?organiserId=${organiser._id}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }

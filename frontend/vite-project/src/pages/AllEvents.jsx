@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import API_BASE_URL from "../api/authApi";
+
 
 export default function AllEvents() {
   const [events, setEvents] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/events")
+    fetch(`${API_BASE_URL}/events`)
       .then((res) => res.json())
       .then((data) => {
         if (data.success && Array.isArray(data.data)) {

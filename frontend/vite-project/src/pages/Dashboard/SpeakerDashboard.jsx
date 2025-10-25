@@ -3,6 +3,9 @@ import SpeakerWelcomeBanner from "../../components/dashboard/Speaker/SpeakerWelc
 import SpeakerProfileOverview from "../../components/dashboard/Speaker/SpeakerProfileOverview";
 import MySessions from "../../components/dashboard/Speaker/MySessions";
 import EventInvites from "../../components/dashboard/Speaker/EventInvites";
+import API_BASE_URL from '../../api/authApi';
+
+
 
 const SpeakerDashboard = () => {
   const [speakerData, setSpeakerData] = useState(null);
@@ -10,7 +13,7 @@ const SpeakerDashboard = () => {
   useEffect(() => {
     const fetchSpeaker = async () => {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:5000/api/speaker/me", {
+      const res = await fetch(`${API_BASE_URL}/speaker/me`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const json = await res.json();

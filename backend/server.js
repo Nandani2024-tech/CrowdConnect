@@ -20,7 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors({
   origin: [
     'http://localhost:5173',  // Local development
-    'https://crowd-connect-j86h.vercel.app'  // Production frontend
+    'https://crowd-connect-h4ga.vercel.app'  // Production frontend
   ],
   credentials: true
 }));

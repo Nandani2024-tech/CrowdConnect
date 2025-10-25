@@ -17,13 +17,24 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+const allowedOrigins = [
+  'http://localhost:5173',  // Local development
+  'https://crowd-connect-bhj9.vercel.app'  // Production frontend
+];
+
 app.use(cors({
-  origin: [
-    'http://localhost:5173',  // Local development
-    'https://crowd-connect-bhj9.vercel.app'  // Production frontend
-  ],
+  origin: function (origin, callback) {
+    // allow requests with no origin (like mobile apps or curl)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.warn(`❌ CORS blocked for origin: ${origin}`);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
+
 
 
 // Database connection
